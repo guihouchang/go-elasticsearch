@@ -1,0 +1,18 @@
+package {{ToLower .PkgName}}
+
+import (
+	"github.com/guihouchang/go-elasticsearch/{{ToLower .PkgName}}/migrate"
+	"github.com/olivere/elastic"
+)
+
+type Client struct {
+	client *elastic.Client
+	Schema *migrate.Schema
+}
+
+func NewClient(client *elastic.Client) *Client {
+	return &Client{
+		client: client,
+		Schema: migrate.NewSchema(client),
+	}
+}
