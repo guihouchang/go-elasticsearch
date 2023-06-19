@@ -1,14 +1,11 @@
-package generate
+package gen
 
 import (
 	"bytes"
-	_ "embed"
 	"entgo.io/ent/entc/load"
 	entfield "entgo.io/ent/schema/field"
 	"fmt"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
-	"github.com/guihouchang/go-elasticsearch/schema/gen"
-	"github.com/spf13/cobra"
 	"html/template"
 	"log"
 	"os"
@@ -16,13 +13,6 @@ import (
 	"strings"
 	"unicode"
 )
-
-var GenCmd = &cobra.Command{
-	Use:     "generate [flags] path",
-	Short:   "generate go code for the schema directory",
-	Example: "ent-elastic generate  ./es/schema",
-	Run:     Gen,
-}
 
 var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ToCamelCase":  ToCamelCase,
@@ -32,10 +22,10 @@ var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ToLower":      strings.ToLower,
 	"RendProperty": RendProperty,
 }).ParseFiles(
-	"../schema/gen/template/const.tmpl",
-	"../schema/gen/template/struct.tmpl",
-	"../schema/gen/template/migrate.tmpl",
-	"../schema/gen/template/client.tmpl",
+	"schema/gen/template/const.tmpl",
+	"schema/gen/template/struct.tmpl",
+	"schema/gen/template/migrate.tmpl",
+	"schema/gen/template/client.tmpl",
 )
 
 func ToUnderscore(camelCase string) string {
@@ -197,11 +187,34 @@ func genConst(sc *load.Schema) error {
 	return os.WriteFile(target, b.Bytes(), os.ModePerm)
 }
 
-func Gen(cmd *cobra.Command, args []string) {
-	if len(args) == 0 {
-		log.Fatalln(fmt.Errorf("schema error for args"))
+func Gen(path string) {
+	template.Must(tpl, err)
+	// 拿到定义描述信息，加载模板生成代码
+	spec, err := (&load.Config{Path: path, BuildFlags: []string{}}).Load()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	path := args[0]
-	gen.Gen(path)
+	//packageName := filepath.Base(spec.PkgPath)
+	for _, sc := range spec.Schemas {
+		err := genConst(sc)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = genStruct(sc)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	err = genMigrate(spec.Schemas)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = genClient()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
