@@ -2,6 +2,8 @@ package gen
 
 import (
 	"bytes"
+	"embed"
+	_ "embed"
 	"entgo.io/ent/entc/load"
 	entfield "entgo.io/ent/schema/field"
 	"fmt"
@@ -9,10 +11,14 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"unicode"
 )
+
+//go:embed template/const.tmpl template/struct.tmpl template/migrate.tmpl template/client.tmpl
+var templateFile embed.FS
 
 var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ToCamelCase":  ToCamelCase,
@@ -21,12 +27,7 @@ var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ESType":       ESType,
 	"ToLower":      strings.ToLower,
 	"RendProperty": RendProperty,
-}).ParseFiles(
-	"schema/gen/template/const.tmpl",
-	"schema/gen/template/struct.tmpl",
-	"schema/gen/template/migrate.tmpl",
-	"schema/gen/template/client.tmpl",
-)
+}).ParseFS(templateFile, "template/*.tmpl")
 
 func ToUnderscore(camelCase string) string {
 	var result strings.Builder
@@ -114,19 +115,45 @@ func genClient() error {
 		return err
 	}
 
+	moduleName, err := executeGoList()
+	if err != nil {
+		return err
+	}
+	fmt.Println(moduleName)
 	pkgName = filepath.Base(pkgName)
+
 	var b bytes.Buffer
 	target := fmt.Sprintf("%s.go", "client")
 	err = tpl.ExecuteTemplate(&b, "client.tmpl", struct {
-		PkgName string
+		PkgName    string
+		ModuleName string
 	}{
-		PkgName: pkgName,
+		PkgName:    pkgName,
+		ModuleName: moduleName,
 	})
 	if err != nil {
 		return err
 	}
 
-	return os.WriteFile(target, b.Bytes(), os.ModePerm)
+	err = os.WriteFile(target, b.Bytes(), os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func executeGoList() (string, error) {
+	cmd := exec.Command("go", "list")
+	cmd.Env = append(os.Environ(), "GO111MODULE=on")
+
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	moduleName := strings.TrimSpace(string(output))
+	return moduleName, nil
 }
 
 func genMigrate(scs []*load.Schema) error {
