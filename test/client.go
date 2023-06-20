@@ -3,7 +3,7 @@ package test
 
 import (
 	"github.com/guihouchang/go-elasticsearch/test/migrate"
-	"github.com/olivere/elastic"
+	"github.com/olivere/elastic/v7"
 )
 
 type Client struct {

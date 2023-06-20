@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/guihouchang/go-elasticsearch/test/migrate"
 	"github.com/guihouchang/go-elasticsearch/test/userdata"
-	"github.com/olivere/elastic"
+	"github.com/olivere/elastic/v7"
 	"testing"
 )
 
@@ -19,10 +19,14 @@ func Test_Decode(t *testing.T) {
 		t.Fatal(err)
 	}
 	var boolQuery []elastic.Query
+	boolQuery = append(boolQuery, elastic.NewTermQuery(userdata.FieldIntIiii, 1))
 	ctx := context.Background()
 	result, err := client.Search().Index(userdata.Label).
 		Query(elastic.NewBoolQuery().Must(boolQuery...)).
 		TrackTotalHits(true).Do(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println(result)
 }
 

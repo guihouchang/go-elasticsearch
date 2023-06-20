@@ -5,7 +5,7 @@ package migrate
 import (
 	"context"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
-	"github.com/olivere/elastic"
+	"github.com/olivere/elastic/v7"
 )
 
 var (
