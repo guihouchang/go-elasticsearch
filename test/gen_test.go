@@ -6,10 +6,10 @@ import (
 	entfield "entgo.io/ent/schema/field"
 	"fmt"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
+	"github.com/guihouchang/go-elasticsearch/schema/gen"
 	"go/parser"
 	"go/token"
 	"html/template"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -216,35 +216,7 @@ func genConst(sc *load.Schema) error {
 func Test_Load(t *testing.T) {
 
 	path := "./schema"
-	template.Must(tpl, err)
-	// 拿到定义描述信息，加载模板生成代码
-	spec, err := (&load.Config{Path: path, BuildFlags: []string{}}).Load()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//packageName := filepath.Base(spec.PkgPath)
-	for _, sc := range spec.Schemas {
-		err := genConst(sc)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = genStruct(sc)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	err = genMigrate(spec.Schemas)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = genClient()
-	if err != nil {
-		log.Fatal(err)
-	}
+	gen.Gen(path)
 
 }
 

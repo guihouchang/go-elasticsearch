@@ -10,13 +10,14 @@ import (
 
 var (
 	UserDataMapping = &field.Mapping{
-		Name: "user_data",
+		Name:     "user_data",
+		Settings: map[string]field.Property{},
 		Properties: map[string]field.Property{
 
 			"text_tttt": map[string]interface{}{
 				"type":            "text",
-				"analyzer":        "aaaa",
-				"search_analyzer": "sss",
+				"analyzer":        "ik_max_word",
+				"search_analyzer": "ik_max_word",
 			},
 
 			"keyword_kkkk": map[string]interface{}{
@@ -77,8 +78,18 @@ func (s *Schema) Create(ctx context.Context) error {
 
 func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 	for _, m := range mappings {
-		_, err := s.client.CreateIndex(m.Name).BodyJson(m.Properties).Do(ctx)
+		exist, err := s.client.IndexExists(m.Name).Do(ctx)
 		if err != nil {
+			return err
+		}
+
+		if !exist {
+			_, err := s.client.CreateIndex(m.Name).BodyJson(m.CreateBody()).Do(ctx)
+			if err != nil {
+				return err
+			}
+		} else {
+			_, err := s.client.PutMapping().Index(m.Name).BodyJson(m.AlterBody()).Do(ctx)
 			return err
 		}
 	}
