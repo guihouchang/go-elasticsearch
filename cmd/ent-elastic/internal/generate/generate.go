@@ -11,7 +11,7 @@ import (
 var GenCmd = &cobra.Command{
 	Use:     "generate [flags] path",
 	Short:   "generate go code for the schema directory",
-	Example: "ent-elastic generate  ./es/schema",
+	Example: "ent-elastic generate  ./schema",
 	Run:     Gen,
 }
 
