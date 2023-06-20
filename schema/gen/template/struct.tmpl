@@ -3,6 +3,8 @@
 package {{.PkgName}}
 
 import (
+    "encoding/json"
+    "github.com/olivere/elastic/v7"
     "time"
 )
 
@@ -10,4 +12,19 @@ type {{.Schema.Name}} struct {
     {{range .Schema.Fields}}
     {{ToCamelCase .Name}} {{Type .Info.Type}} `json:"{{.Name}},omitempty"`
     {{end}}
+}
+
+func Unserizer{{.Schema.Name}}(result *elastic.SearchResult) ([]*{{.Schema.Name}}, error) {
+	datas := make([]*{{.Schema.Name}}, 0)
+	for _, h := range result.Hits.Hits {
+		data := &{{.Schema.Name}}{}
+		err := json.Unmarshal(h.Source, data)
+		if err != nil {
+			return nil, err
+		}
+
+		datas = append(datas, data)
+	}
+
+	return datas, nil
 }

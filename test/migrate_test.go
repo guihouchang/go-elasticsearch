@@ -27,7 +27,13 @@ func Test_Decode(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(result)
+
+	datas, err := UnserizerUserData(result)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	fmt.Println(datas)
 }
 
 func Test_Migrate(t *testing.T) {

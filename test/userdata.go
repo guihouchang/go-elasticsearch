@@ -3,6 +3,8 @@
 package test
 
 import (
+	"encoding/json"
+	"github.com/olivere/elastic/v7"
 	"time"
 )
 
@@ -26,4 +28,19 @@ type UserData struct {
 	BoolBbbb bool `json:"bool_bbbb,omitempty"`
 
 	DateDddd time.Time `json:"date_dddd,omitempty"`
+}
+
+func UnserizerUserData(result *elastic.SearchResult) ([]*UserData, error) {
+	datas := make([]*UserData, 0)
+	for _, h := range result.Hits.Hits {
+		data := &UserData{}
+		err := json.Unmarshal(h.Source, data)
+		if err != nil {
+			return nil, err
+		}
+
+		datas = append(datas, data)
+	}
+
+	return datas, nil
 }
