@@ -58,7 +58,7 @@ func (s *Schema) Create(ctx context.Context) error {
 
 func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
     for _, m := range mappings {
-        exist, err := s.client.IndexExists(m.Name).Do(ctx);
+        exist, err := s.client.IndexExists(m.Name).Do(ctx)
         if err != nil {
             return err
         }
@@ -69,10 +69,41 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
                 return err
             }
         } else {
-            _, err := s.client.PutMapping().Index(m.Name).BodyJson(m.AlterBody()).Do(ctx)
-            return err
+           // 先进行备份
+           _, err := s.client.Reindex().Body(m.BackupBody()).Do(ctx)
+           if err != nil {
+               return err
+           }
+
+           // 删除旧索引
+           _, err = s.client.DeleteIndex(m.Name).Do(ctx)
+           if err != nil {
+               return err
+           }
+
+           // 创建索引
+           _, err = s.client.CreateIndex(m.Name).BodyJson(m.CreateBody()).Do(ctx)
+           if err != nil {
+               return err
+           }
+
+          exist, err := s.client.IndexExists(m.BackupName()).Do(ctx)
+          if err != nil {
+              return err
+          }
+
+          if exist {
+              // 恢复数据
+              _, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
+              // 删除旧索引
+              _, err = s.client.DeleteIndex(m.BackupName()).Do(ctx)
+              if err != nil {
+                  return err
+              }
+          }
+
+           return err
         }
     }
-
     return nil
 }

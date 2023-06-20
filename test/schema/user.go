@@ -22,7 +22,7 @@ func (UserData) Fields() []ent.Field {
 		esfield.Float("float_ffff"),
 		esfield.Double("double_ddddd"),
 		esfield.Bool("bool_bbbb"),
-		esfield.Date("date_dddd").Format("Y-m-d H:m:s"),
+		esfield.Date("date_dddd").Format("yyyy-MM-dd HH:mm:ss"),
 	}
 }
 

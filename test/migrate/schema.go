@@ -53,7 +53,7 @@ var (
 
 			"date_dddd": map[string]interface{}{
 				"type":   "date",
-				"format": "Y-m-d H:m:s",
+				"format": "yyyy-MM-dd HH:mm:ss",
 			},
 		},
 
@@ -95,10 +95,41 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 				return err
 			}
 		} else {
-			_, err := s.client.PutMapping().Index(m.Name).BodyJson(m.AlterBody()).Do(ctx)
+			// 先进行备份
+			_, err := s.client.Reindex().Body(m.BackupBody()).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			// 删除旧索引
+			_, err = s.client.DeleteIndex(m.Name).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			// 创建索引
+			_, err = s.client.CreateIndex(m.Name).BodyJson(m.CreateBody()).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			exist, err := s.client.IndexExists(m.BackupName()).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			if exist {
+				// 恢复数据
+				_, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
+				// 删除旧索引
+				_, err = s.client.DeleteIndex(m.BackupName()).Do(ctx)
+				if err != nil {
+					return err
+				}
+			}
+
 			return err
 		}
 	}
-
 	return nil
 }
