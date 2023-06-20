@@ -13,7 +13,7 @@ type UserData struct {
 
 func (UserData) Fields() []ent.Field {
 	return []ent.Field{
-		esfield.Text("text_tttt").Analyzer("ik_max_word").SearchAnalyzer("ik_max_word"),
+		esfield.Text("id").Analyzer("ik_max_word").SearchAnalyzer("ik_max_word"),
 		esfield.Keyword("keyword_kkkk"),
 		esfield.Byte("byte_bbbb"),
 		esfield.Short("short_ssss"),

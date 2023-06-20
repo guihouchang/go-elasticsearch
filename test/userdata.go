@@ -9,7 +9,7 @@ import (
 )
 
 type UserData struct {
-	TextTttt string `json:"text_tttt,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	KeywordKkkk string `json:"keyword_kkkk,omitempty"`
 

@@ -13,7 +13,7 @@ var (
 		Name: "user_data",
 		Properties: map[string]interface{}{
 
-			"text_tttt": map[string]interface{}{
+			"id": map[string]interface{}{
 				"type":            "text",
 				"analyzer":        "ik_max_word",
 				"search_analyzer": "ik_max_word",

@@ -4,7 +4,7 @@ package userdata
 const (
 	Label = "user_data"
 
-	FieldTextTttt = "text_tttt"
+	FieldID = "id"
 
 	FieldKeywordKkkk = "keyword_kkkk"
 
