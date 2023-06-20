@@ -12,7 +12,7 @@ var (
     {{range .}}
     {{ToCamelCase .Name}}Mapping = &field.Mapping{
         Name: "{{ToUnderscore .Name}}",
-        Properties: map[string]field.Property{
+        Properties: map[string]interface{}{
            {{range .Fields}}
             "{{ToUnderscore .Name}}": map[string]interface{}{
                 "type": "{{ESType .Info.Type}}",
@@ -21,6 +21,19 @@ var (
             },
            {{end}}
         },
+        {{ with .Annotations}}
+            {{ with .Settings }}
+        Settings: map[string]interface{} {
+                {{ with .Settings}}{{ range $k, $v := .}}
+                "{{$k}}": {{$v}},
+                {{end}}{{end}}
+            },
+            {{else}}
+        Settings: map[string]interface{}{},
+            {{end}}
+        {{else}}
+        Settings: map[string]interface{}{},
+        {{end}}
 
     }
     {{end}}

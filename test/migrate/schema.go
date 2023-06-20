@@ -10,9 +10,8 @@ import (
 
 var (
 	UserDataMapping = &field.Mapping{
-		Name:     "user_data",
-		Settings: map[string]field.Property{},
-		Properties: map[string]field.Property{
+		Name: "user_data",
+		Properties: map[string]interface{}{
 
 			"text_tttt": map[string]interface{}{
 				"type":            "text",
@@ -56,6 +55,13 @@ var (
 				"type":   "date",
 				"format": "Y-m-d H:m:s",
 			},
+		},
+
+		Settings: map[string]interface{}{
+
+			"number_of_replicas": 2,
+
+			"number_of_shards": 1,
 		},
 	}
 

@@ -2,6 +2,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/schema"
+	"github.com/guihouchang/go-elasticsearch/schema/annotation"
 	esfield "github.com/guihouchang/go-elasticsearch/schema/field"
 )
 
@@ -11,7 +13,7 @@ type UserData struct {
 
 func (UserData) Fields() []ent.Field {
 	return []ent.Field{
-		esfield.Text("text_tttt").Analyzer("aaaa").SearchAnalyzer("sss"),
+		esfield.Text("text_tttt").Analyzer("ik_max_word").SearchAnalyzer("ik_max_word"),
 		esfield.Keyword("keyword_kkkk"),
 		esfield.Byte("byte_bbbb"),
 		esfield.Short("short_ssss"),
@@ -21,5 +23,15 @@ func (UserData) Fields() []ent.Field {
 		esfield.Double("double_ddddd"),
 		esfield.Bool("bool_bbbb"),
 		esfield.Date("date_dddd").Format("Y-m-d H:m:s"),
+	}
+}
+
+// Annotations of the schema.
+func (UserData) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		annotation.Setting{Settings: map[string]interface{}{
+			"number_of_shards":   1,
+			"number_of_replicas": 2,
+		}},
 	}
 }

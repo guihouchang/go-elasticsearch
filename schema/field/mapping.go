@@ -3,9 +3,9 @@ package field
 type Property map[string]interface{}
 
 type Mapping struct {
-	Name       string              `json:"-"`
-	Properties map[string]Property `json:"properties,omitempty"`
-	Settings   map[string]Property `json:"settings,omitempty"`
+	Name       string                 `json:"-"`
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	Settings   map[string]interface{} `json:"settings,omitempty"`
 }
 
 func (m *Mapping) AlterBody() map[string]interface{} {
