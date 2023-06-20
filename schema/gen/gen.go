@@ -119,7 +119,6 @@ func genClient() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(moduleName)
 	pkgName = filepath.Base(pkgName)
 
 	var b bytes.Buffer
