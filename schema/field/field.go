@@ -91,3 +91,31 @@ func Bool(name string) *boolBuilder {
 		Name: name,
 	}}
 }
+
+type jsonBuilder struct {
+	desc *field.Descriptor
+}
+
+func (j *jsonBuilder) Descriptor() *field.Descriptor {
+	return j.desc
+}
+
+func Strings(name string) *jsonBuilder {
+	return &jsonBuilder{desc: field.JSON(name, []string{}).Descriptor()}
+}
+
+func Ints(name string) *jsonBuilder {
+	return &jsonBuilder{desc: field.JSON(name, []int{}).Descriptor()}
+}
+
+func Int64s(name string) *jsonBuilder {
+	return &jsonBuilder{desc: field.JSON(name, []int64{}).Descriptor()}
+}
+
+func Floats(name string) *jsonBuilder {
+	return &jsonBuilder{desc: field.JSON(name, []float32{}).Descriptor()}
+}
+
+func JSON(name string, typ any) *jsonBuilder {
+	return &jsonBuilder{desc: field.JSON(name, typ).Descriptor()}
+}

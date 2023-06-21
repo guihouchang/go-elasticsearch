@@ -28,6 +28,14 @@ type UserData struct {
 	BoolBbbb bool `json:"bool_bbbb,omitempty"`
 
 	DateDddd time.Time `json:"date_dddd,omitempty"`
+
+	StingsSssss []string `json:"stings_sssss,omitempty"`
+
+	IntsIiiiii []int `json:"ints_iiiiii,omitempty"`
+
+	Int64sIiiiii []int64 `json:"int64s_iiiiii,omitempty"`
+
+	FloatsLlllll []float32 `json:"floats_llllll,omitempty"`
 }
 
 func UnserizerUserData(result *elastic.SearchResult) ([]*UserData, error) {

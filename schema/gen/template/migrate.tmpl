@@ -131,14 +131,15 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
           if exist {
               // 恢复数据
               _, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
+              if err != nil {
+                return err
+              }
               // 删除旧索引
               _, err = s.client.DeleteIndex(m.BackupName()).Do(ctx)
               if err != nil {
                   return err
               }
           }
-
-           return err
         }
     }
     return nil

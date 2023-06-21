@@ -56,6 +56,22 @@ var (
 				"type":   "date",
 				"format": "yyyy-MM-dd HH:mm:ss",
 			},
+
+			"stings_sssss": map[string]interface{}{
+				"type": "keyword",
+			},
+
+			"ints_iiiiii": map[string]interface{}{
+				"type": "keyword",
+			},
+
+			"int64s_iiiiii": map[string]interface{}{
+				"type": "keyword",
+			},
+
+			"floats_llllll": map[string]interface{}{
+				"type": "keyword",
+			},
 		},
 
 		Settings: map[string]interface{}{
@@ -156,14 +172,10 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 			if exist {
 				// 恢复数据
 				_, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
-				// 删除旧索引
-				_, err = s.client.DeleteIndex(m.BackupName()).Do(ctx)
 				if err != nil {
 					return err
 				}
 			}
-
-			return err
 		}
 	}
 	return nil

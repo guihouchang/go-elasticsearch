@@ -23,6 +23,10 @@ func (UserData) Fields() []ent.Field {
 		esfield.Double("double_ddddd"),
 		esfield.Bool("bool_bbbb"),
 		esfield.Date("date_dddd").Format("yyyy-MM-dd HH:mm:ss"),
+		esfield.Strings("stings_sssss"),
+		esfield.Ints("ints_iiiiii"),
+		esfield.Int64s("int64s_iiiiii"),
+		esfield.Floats("floats_llllll"),
 	}
 }
 

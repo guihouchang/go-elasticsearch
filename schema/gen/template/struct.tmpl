@@ -10,7 +10,7 @@ import (
 
 type {{.Schema.Name}} struct {
     {{range .Schema.Fields}}
-    {{ToCamelCase .Name}} {{Type .Info.Type}} `json:"{{.Name}},omitempty"`
+    {{ToCamelCase .Name}} {{Type .}} `json:"{{.Name}},omitempty"`
     {{end}}
 }
 

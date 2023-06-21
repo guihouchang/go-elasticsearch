@@ -88,6 +88,8 @@ func RendProperty(fd *load.Field) []template.HTML {
 				template.HTML(fmt.Sprintf(`"%s":"%s"`, "format", format)))
 		}
 		return strPropertyList
+	case entfield.TypeJSON:
+
 	}
 
 	return nil
@@ -97,7 +99,8 @@ func ESType(t entfield.Type) string {
 	return field.Type(t).String()
 }
 
-func Type(t entfield.Type) string {
+func Type(fd *load.Field) string {
+	t := fd.Info.Type
 	if t.String() == "invalid" {
 		esType := field.Type(t)
 		switch esType {
@@ -109,6 +112,12 @@ func Type(t entfield.Type) string {
 			return "double"
 		}
 	} else {
+		switch t {
+		case entfield.TypeJSON:
+			// json 格式需要单独处理
+			return fd.Info.Ident
+		}
+
 		return t.String()
 	}
 

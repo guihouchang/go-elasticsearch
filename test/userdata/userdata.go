@@ -23,4 +23,12 @@ const (
 	FieldBoolBbbb = "bool_bbbb"
 
 	FieldDateDddd = "date_dddd"
+
+	FieldStingsSssss = "stings_sssss"
+
+	FieldIntsIiiiii = "ints_iiiiii"
+
+	FieldInt64sIiiiii = "int64s_iiiiii"
+
+	FieldFloatsLlllll = "floats_llllll"
 )
