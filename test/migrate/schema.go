@@ -5,9 +5,10 @@ package migrate
 import (
 	"context"
 	"fmt"
-	"github.com/google/go-cmp/cmp"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
 	"github.com/olivere/elastic/v7"
+	"reflect"
+	"time"
 )
 
 var (
@@ -99,6 +100,22 @@ func (s *Schema) Create(ctx context.Context) error {
 	return Create(ctx, s, Tables)
 }
 
+func checkUpdateMapping(subset, superset map[string]interface{}) bool {
+	for key, value := range subset {
+		// 检查键是否存在于超集中
+		if supersetValue, ok := superset[key]; ok {
+			// 检查对应值是否相等
+			if !reflect.DeepEqual(supersetValue, value) {
+				return true
+			}
+		} else {
+			// 键不存在于超集中
+			return true
+		}
+	}
+	return false
+}
+
 func getProperties(mapping map[string]interface{}, name string) (map[string]interface{}, error) {
 	if mappingData, ok := mapping[name]; ok {
 		if tmpData, ok := mappingData.(map[string]interface{}); ok {
@@ -141,8 +158,8 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 				return err
 			}
 
-			// 比较mapping是否有变更
-			if cmp.Equal(properties, m.Properties) {
+			// 比较mapping是否有变更，如果本地是远程的子集那么就不需要变更
+			if !checkUpdateMapping(m.Properties, properties) {
 				continue
 			}
 
@@ -170,8 +187,15 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 			}
 
 			if exist {
+				// 等待1秒生效后再恢复数据
+				time.Sleep(time.Second)
 				// 恢复数据
 				_, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
+				if err != nil {
+					return err
+				}
+				// 删除旧索引
+				_, err = s.client.DeleteIndex(m.BackupName()).Do(ctx)
 				if err != nil {
 					return err
 				}
