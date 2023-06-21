@@ -18,11 +18,12 @@ func (t *textBuilder) Analyzer(analyzer string) *textBuilder {
 }
 
 // SearchAnalyzer 搜索分词器
+// Deprecated: 该方法已经弃用,在es7.x版本中不在设置search_analyzer
 func (t *textBuilder) SearchAnalyzer(sa string) *textBuilder {
 	if t.desc.SchemaType == nil {
 		t.desc.SchemaType = map[string]string{}
 	}
-	t.desc.SchemaType["search_analyzer"] = sa
+	//t.desc.SchemaType["search_analyzer"] = sa
 	return t
 }
 

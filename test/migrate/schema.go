@@ -4,6 +4,8 @@ package migrate
 
 import (
 	"context"
+	"fmt"
+	"github.com/google/go-cmp/cmp"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
 	"github.com/olivere/elastic/v7"
 )
@@ -14,9 +16,8 @@ var (
 		Properties: map[string]interface{}{
 
 			"id": map[string]interface{}{
-				"type":            "text",
-				"analyzer":        "ik_max_word",
-				"search_analyzer": "ik_max_word",
+				"type":     "text",
+				"analyzer": "ik_max_word",
 			},
 
 			"keyword_kkkk": map[string]interface{}{
@@ -82,6 +83,24 @@ func (s *Schema) Create(ctx context.Context) error {
 	return Create(ctx, s, Tables)
 }
 
+func getProperties(mapping map[string]interface{}, name string) (map[string]interface{}, error) {
+	if mappingData, ok := mapping[name]; ok {
+		if tmpData, ok := mappingData.(map[string]interface{}); ok {
+			if tmpData, ok := tmpData["mappings"]; ok {
+				if tmpData, ok := tmpData.(map[string]interface{}); ok {
+					if tmpData, ok := tmpData["properties"]; ok {
+						if properties, ok := tmpData.(map[string]interface{}); ok {
+							return properties, nil
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nil, fmt.Errorf("properties not found")
+}
+
 func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 	for _, m := range mappings {
 		exist, err := s.client.IndexExists(m.Name).Do(ctx)
@@ -95,8 +114,24 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
 				return err
 			}
 		} else {
+			// 获取当前的mapping
+			mapping, err := s.client.GetMapping().Index(m.Name).Do(ctx)
+			if err != nil {
+				return err
+			}
+
+			properties, err := getProperties(mapping, m.Name)
+			if err != nil {
+				return err
+			}
+
+			// 比较mapping是否有变更
+			if cmp.Equal(properties, m.Properties) {
+				continue
+			}
+
 			// 先进行备份
-			_, err := s.client.Reindex().Body(m.BackupBody()).Do(ctx)
+			_, err = s.client.Reindex().Body(m.BackupBody()).Do(ctx)
 			if err != nil {
 				return err
 			}
