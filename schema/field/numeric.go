@@ -10,12 +10,22 @@ func (t *int8Builder) Descriptor() *field.Descriptor {
 	return t.desc
 }
 
+func (t *int8Builder) Comment(c string) *int8Builder {
+	t.desc.Comment = c
+	return t
+}
+
 type int16Builder struct {
 	desc *field.Descriptor
 }
 
 func (t *int16Builder) Descriptor() *field.Descriptor {
 	return t.desc
+}
+
+func (t *int16Builder) Comment(c string) *int16Builder {
+	t.desc.Comment = c
+	return t
 }
 
 type int32Builder struct {
@@ -26,12 +36,22 @@ func (t *int32Builder) Descriptor() *field.Descriptor {
 	return t.desc
 }
 
+func (t *int32Builder) Comment(c string) *int32Builder {
+	t.desc.Comment = c
+	return t
+}
+
 type int64Builder struct {
 	desc *field.Descriptor
 }
 
 func (t *int64Builder) Descriptor() *field.Descriptor {
 	return t.desc
+}
+
+func (t *int64Builder) Comment(c string) *int64Builder {
+	t.desc.Comment = c
+	return t
 }
 
 type floatBuilder struct {
@@ -42,12 +62,22 @@ func (t *floatBuilder) Descriptor() *field.Descriptor {
 	return t.desc
 }
 
+func (t *floatBuilder) Comment(c string) *floatBuilder {
+	t.desc.Comment = c
+	return t
+}
+
 type doubleBuilder struct {
 	desc *field.Descriptor
 }
 
 func (t *doubleBuilder) Descriptor() *field.Descriptor {
 	return t.desc
+}
+
+func (t *doubleBuilder) Comment(c string) *doubleBuilder {
+	t.desc.Comment = c
+	return t
 }
 
 type halfFloatBuilder struct {
@@ -58,12 +88,22 @@ func (t *halfFloatBuilder) Descriptor() *field.Descriptor {
 	return t.desc
 }
 
+func (t *halfFloatBuilder) Comment(c string) *halfFloatBuilder {
+	t.desc.Comment = c
+	return t
+}
+
 type scaledFloatBuilder struct {
 	desc *field.Descriptor
 }
 
 func (t *scaledFloatBuilder) Descriptor() *field.Descriptor {
 	return t.desc
+}
+
+func (t *scaledFloatBuilder) Comment(c string) *scaledFloatBuilder {
+	t.desc.Comment = c
+	return t
 }
 
 func Byte(name string) *int8Builder {

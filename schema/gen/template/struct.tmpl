@@ -8,7 +8,7 @@ import (
 )
 
 type {{.Schema.Name}} struct {
-    {{range .Schema.Fields}}
+    {{range .Schema.Fields}}{{RendComment .}}
     {{ToCamelCase .Name}} {{Type .}} `json:"{{.Name}},omitempty"`
     {{end}}
 }

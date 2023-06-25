@@ -8,32 +8,33 @@ import (
 )
 
 type UserData struct {
+	// ID 这是一个ID
 	ID string `json:"id,omitempty"`
-
+	// KeywordKkkk 这是一个keyword
 	KeywordKkkk string `json:"keyword_kkkk,omitempty"`
-
+	// ByteBbbb 这是一个byte
 	ByteBbbb int8 `json:"byte_bbbb,omitempty"`
-
+	// ShortSsss 这是一个short
 	ShortSsss int16 `json:"short_ssss,omitempty"`
-
+	// IntIiii 这是一个int
 	IntIiii int32 `json:"int_iiii,omitempty"`
-
+	// LongLlll 这是一个long
 	LongLlll int64 `json:"long_llll,omitempty"`
-
+	// FloatFfff 这是一个Float
 	FloatFfff float32 `json:"float_ffff,omitempty"`
-
+	// DoubleDdddd 这是一个double
 	DoubleDdddd float64 `json:"double_ddddd,omitempty"`
-
+	// BoolBbbb 这是一个bool
 	BoolBbbb bool `json:"bool_bbbb,omitempty"`
-
+	// DateDddd 这是一个date
 	DateDddd string `json:"date_dddd,omitempty"`
-
+	// StingsSssss 这是一个strings
 	StingsSssss []string `json:"stings_sssss,omitempty"`
-
+	// IntsIiiiii 这是一个ints
 	IntsIiiiii []int `json:"ints_iiiiii,omitempty"`
-
+	// Int64sIiiiii 这是一个int64s
 	Int64sIiiiii []int64 `json:"int64s_iiiiii,omitempty"`
-
+	// FloatsLlllll 这是一个floats
 	FloatsLlllll []float32 `json:"floats_llllll,omitempty"`
 }
 

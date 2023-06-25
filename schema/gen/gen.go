@@ -34,6 +34,7 @@ var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ToLower":      strings.ToLower,
 	"RendProperty": RendProperty,
 	"Imports":      Imports,
+	"RendComment":  RendComment,
 }).ParseFS(templateFile, "template/*.tmpl")
 
 func ToUnderscore(camelCase string) string {
@@ -65,6 +66,10 @@ func ToCamelCase(s string) string {
 
 func HtmlUnescapeString(s string) template.HTML {
 	return template.HTML(s)
+}
+
+func RendComment(fd *load.Field) template.HTML {
+	return template.HTML(fmt.Sprintf("// %s %s", pascal(fd.Name), fd.Comment))
 }
 
 func RendProperty(fd *load.Field) []template.HTML {

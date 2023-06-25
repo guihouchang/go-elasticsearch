@@ -17,6 +17,11 @@ func (t *textBuilder) Analyzer(analyzer string) *textBuilder {
 	return t
 }
 
+func (t *textBuilder) Comment(c string) *textBuilder {
+	t.desc.Comment = c
+	return t
+}
+
 // SearchAnalyzer 搜索分词器
 // Deprecated: 该方法已经弃用,在es7.x版本中不在设置search_analyzer
 func (t *textBuilder) SearchAnalyzer(sa string) *textBuilder {
@@ -51,12 +56,22 @@ func (d *dateBuilder) Format(format string) *dateBuilder {
 	return d
 }
 
+func (d *dateBuilder) Comment(c string) *dateBuilder {
+	d.desc.Comment = c
+	return d
+}
+
 type boolBuilder struct {
 	desc *field.Descriptor
 }
 
 func (b *boolBuilder) Descriptor() *field.Descriptor {
 	return b.desc
+}
+
+func (b *boolBuilder) Comment(c string) *boolBuilder {
+	b.desc.Comment = c
+	return b
 }
 
 func Text(name string) *textBuilder {
@@ -69,6 +84,11 @@ func Text(name string) *textBuilder {
 
 func (k *keywordBuilder) Descriptor() *field.Descriptor {
 	return k.desc
+}
+
+func (k *keywordBuilder) Comment(c string) *keywordBuilder {
+	k.desc.Comment = c
+	return k
 }
 
 func Keyword(name string) *keywordBuilder {
@@ -98,6 +118,11 @@ type jsonBuilder struct {
 
 func (j *jsonBuilder) Descriptor() *field.Descriptor {
 	return j.desc
+}
+
+func (j *jsonBuilder) Comment(c string) *jsonBuilder {
+	j.desc.Comment = c
+	return j
 }
 
 func Strings(name string) *jsonBuilder {

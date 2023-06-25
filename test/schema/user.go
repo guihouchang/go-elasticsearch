@@ -13,20 +13,20 @@ type UserData struct {
 
 func (UserData) Fields() []ent.Field {
 	return []ent.Field{
-		esfield.Text("id").Analyzer("ik_max_word").SearchAnalyzer("ik_max_word"),
-		esfield.Keyword("keyword_kkkk"),
-		esfield.Byte("byte_bbbb"),
-		esfield.Short("short_ssss"),
-		esfield.Int("int_iiii"),
-		esfield.Long("long_llll"),
-		esfield.Float("float_ffff"),
-		esfield.Double("double_ddddd"),
-		esfield.Bool("bool_bbbb"),
-		esfield.Date("date_dddd").Format("yyyy-MM-dd HH:mm:ss"),
-		esfield.Strings("stings_sssss"),
-		esfield.Ints("ints_iiiiii"),
-		esfield.Int64s("int64s_iiiiii"),
-		esfield.Floats("floats_llllll"),
+		esfield.Text("id").Analyzer("ik_max_word").Comment("这是一个ID"),
+		esfield.Keyword("keyword_kkkk").Comment("这是一个keyword"),
+		esfield.Byte("byte_bbbb").Comment("这是一个byte"),
+		esfield.Short("short_ssss").Comment("这是一个short"),
+		esfield.Int("int_iiii").Comment("这是一个int"),
+		esfield.Long("long_llll").Comment("这是一个long"),
+		esfield.Float("float_ffff").Comment("这是一个Float"),
+		esfield.Double("double_ddddd").Comment("这是一个double"),
+		esfield.Bool("bool_bbbb").Comment("这是一个bool"),
+		esfield.Date("date_dddd").Format("yyyy-MM-dd HH:mm:ss").Comment("这是一个date"),
+		esfield.Strings("stings_sssss").Comment("这是一个strings"),
+		esfield.Ints("ints_iiiiii").Comment("这是一个ints"),
+		esfield.Int64s("int64s_iiiiii").Comment("这是一个int64s"),
+		esfield.Floats("floats_llllll").Comment("这是一个floats"),
 	}
 }
 
