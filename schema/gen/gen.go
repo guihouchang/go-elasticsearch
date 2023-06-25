@@ -33,6 +33,7 @@ var tpl, err = template.New("").Funcs(template.FuncMap{
 	"ESType":       ESType,
 	"ToLower":      strings.ToLower,
 	"RendProperty": RendProperty,
+	"Imports":      Imports,
 }).ParseFS(templateFile, "template/*.tmpl")
 
 func ToUnderscore(camelCase string) string {
@@ -99,6 +100,23 @@ func ESType(t entfield.Type) string {
 	return field.Type(t).String()
 }
 
+func Imports(sc *load.Schema) []template.HTML {
+	htmlImpotrs := []template.HTML{
+		`"encoding/json"`,
+		`"github.com/olivere/elastic/v7"`,
+	}
+
+	for _, fd := range sc.Fields {
+		t := fd.Info.Type
+		switch t {
+		case entfield.TypeTime:
+			htmlImpotrs = append(htmlImpotrs, `"github.com/gookit/goutil/timex"`)
+		}
+	}
+
+	return htmlImpotrs
+}
+
 func Type(fd *load.Field) string {
 	t := fd.Info.Type
 	if t.String() == "invalid" {
@@ -116,6 +134,8 @@ func Type(fd *load.Field) string {
 		case entfield.TypeJSON:
 			// json 格式需要单独处理
 			return fd.Info.Ident
+		case entfield.TypeTime:
+			return "timex.Time"
 		}
 
 		return t.String()

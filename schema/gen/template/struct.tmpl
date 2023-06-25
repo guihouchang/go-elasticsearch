@@ -3,9 +3,8 @@
 package {{.PkgName}}
 
 import (
-    "encoding/json"
-    "github.com/olivere/elastic/v7"
-    "time"
+    {{range Imports .Schema}}
+    {{.}}{{end}}
 )
 
 type {{.Schema.Name}} struct {

@@ -4,8 +4,8 @@ package test
 
 import (
 	"encoding/json"
+	"github.com/gookit/goutil/timex"
 	"github.com/olivere/elastic/v7"
-	"time"
 )
 
 type UserData struct {
@@ -27,7 +27,7 @@ type UserData struct {
 
 	BoolBbbb bool `json:"bool_bbbb,omitempty"`
 
-	DateDddd time.Time `json:"date_dddd,omitempty"`
+	DateDddd timex.Time `json:"date_dddd,omitempty"`
 
 	StingsSssss []string `json:"stings_sssss,omitempty"`
 
