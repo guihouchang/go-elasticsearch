@@ -29,7 +29,7 @@ func Test_Decode(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	datas, err := UnserizerUserData(result)
+	datas, _, err := UnserizerUserData(result)
 	if err != nil {
 		t.Fatal(err)
 	}

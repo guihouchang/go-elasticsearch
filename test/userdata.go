@@ -38,17 +38,17 @@ type UserData struct {
 	FloatsLlllll []float32 `json:"floats_llllll,omitempty"`
 }
 
-func UnserizerUserData(result *elastic.SearchResult) ([]*UserData, error) {
+func UnserizerUserData(result *elastic.SearchResult) ([]*UserData, int, error) {
 	datas := make([]*UserData, 0)
 	for _, h := range result.Hits.Hits {
 		data := &UserData{}
 		err := json.Unmarshal(h.Source, data)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		datas = append(datas, data)
 	}
 
-	return datas, nil
+	return datas, int(result.Hits.TotalHits.Value), nil
 }

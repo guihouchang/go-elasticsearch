@@ -6,6 +6,7 @@ const (
     {{range .Fields}}
     Field{{ToCamelCase .Name}} = "{{.Name}}"
     {{end}}
+    Table = "{{ToUnderscore .Name}}"
 )
 
 

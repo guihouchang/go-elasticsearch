@@ -14,17 +14,17 @@ type {{.Schema.Name}} struct {
     {{end}}
 }
 
-func Unserizer{{.Schema.Name}}(result *elastic.SearchResult) ([]*{{.Schema.Name}}, error) {
+func Unserizer{{.Schema.Name}}(result *elastic.SearchResult) ([]*{{.Schema.Name}}, int, error) {
 	datas := make([]*{{.Schema.Name}}, 0)
 	for _, h := range result.Hits.Hits {
 		data := &{{.Schema.Name}}{}
 		err := json.Unmarshal(h.Source, data)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 
 		datas = append(datas, data)
 	}
 
-	return datas, nil
+	return datas, int(result.Hits.TotalHits.Value), nil
 }

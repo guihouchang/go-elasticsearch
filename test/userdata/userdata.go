@@ -31,4 +31,6 @@ const (
 	FieldInt64sIiiiii = "int64s_iiiiii"
 
 	FieldFloatsLlllll = "floats_llllll"
+
+	Table = "user_data"
 )
