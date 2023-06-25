@@ -110,7 +110,7 @@ func Imports(sc *load.Schema) []template.HTML {
 		t := fd.Info.Type
 		switch t {
 		case entfield.TypeTime:
-			htmlImpotrs = append(htmlImpotrs, `"github.com/gookit/goutil/timex"`)
+
 		}
 	}
 
@@ -135,7 +135,7 @@ func Type(fd *load.Field) string {
 			// json 格式需要单独处理
 			return fd.Info.Ident
 		case entfield.TypeTime:
-			return "timex.Time"
+			return "string"
 		}
 
 		return t.String()
