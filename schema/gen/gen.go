@@ -35,6 +35,7 @@ var tpl, err = template.New("").Funcs(template.FuncMap{
 	"RendProperty": RendProperty,
 	"Imports":      Imports,
 	"RendComment":  RendComment,
+	"getTableName": getTableName,
 }).ParseFS(templateFile, "template/*.tmpl")
 
 func ToUnderscore(camelCase string) string {
@@ -279,14 +280,29 @@ func genStruct(sc *load.Schema) error {
 	return os.WriteFile(target, b.Bytes(), os.ModePerm)
 }
 
+func getTableName(sc *load.Schema) string {
+
+	tableName := strings.ToLower(sc.Name)
+
+	if tmp, ok := sc.Annotations["EntSQL"]; ok {
+		if an, ok := tmp.(map[string]interface{}); ok {
+			if table, ok := an["table"]; ok {
+				return table.(string)
+			}
+		}
+	}
+
+	return ToUnderscore(tableName)
+}
+
 func genConst(sc *load.Schema) error {
 	name := strings.ToLower(sc.Name)
 	err = os.MkdirAll(name, os.ModePerm)
 	if err != nil {
 		return err
 	}
-	var b bytes.Buffer
 
+	var b bytes.Buffer
 	target := fmt.Sprintf("%s/%s.go", name, name)
 	err := tpl.ExecuteTemplate(&b, "const.tmpl", sc)
 	if err != nil {

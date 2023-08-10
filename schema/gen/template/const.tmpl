@@ -2,11 +2,11 @@
 package {{ToLower .Name}}
 
 const (
-    Label = "{{ToUnderscore .Name}}"
+    Label = "{{getTableName .}}"
     {{range .Fields}}
     Field{{ToCamelCase .Name}} = "{{.Name}}"
     {{end}}
-    Table = "{{ToUnderscore .Name}}"
+    Table = "{{getTableName .}}"
 )
 
 

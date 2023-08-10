@@ -14,7 +14,7 @@ import (
 var (
     {{range .}}
     {{ToCamelCase .Name}}Mapping = &field.Mapping{
-        Name: "{{ToUnderscore .Name}}",
+        Name: "{{getTableName .}}",
         Properties: map[string]interface{}{
            {{range .Fields}}
             "{{ToUnderscore .Name}}": map[string]interface{}{

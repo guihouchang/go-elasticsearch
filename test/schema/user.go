@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"github.com/guihouchang/go-elasticsearch/schema/annotation"
 	esfield "github.com/guihouchang/go-elasticsearch/schema/field"
@@ -37,5 +38,6 @@ func (UserData) Annotations() []schema.Annotation {
 			"number_of_shards":   1,
 			"number_of_replicas": 2,
 		}},
+		entsql.Annotation{Table: "test_user_data"},
 	}
 }

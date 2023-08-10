@@ -2,7 +2,7 @@
 package userdata
 
 const (
-	Label = "user_data"
+	Label = "test_user_data"
 
 	FieldID = "id"
 
@@ -32,5 +32,5 @@ const (
 
 	FieldFloatsLlllll = "floats_llllll"
 
-	Table = "user_data"
+	Table = "test_user_data"
 )

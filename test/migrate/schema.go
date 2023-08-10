@@ -13,7 +13,7 @@ import (
 
 var (
 	UserDataMapping = &field.Mapping{
-		Name: "user_data",
+		Name: "test_user_data",
 		Properties: map[string]interface{}{
 
 			"id": map[string]interface{}{

@@ -1,18 +1,13 @@
 package test
 
 import (
-	"bytes"
 	"entgo.io/ent/entc/load"
 	entfield "entgo.io/ent/schema/field"
 	"fmt"
 	"github.com/guihouchang/go-elasticsearch/schema/field"
 	"github.com/guihouchang/go-elasticsearch/schema/gen"
-	"go/parser"
-	"go/token"
 	"html/template"
-	"os"
-	"os/exec"
-	"path/filepath"
+	"math"
 	"strings"
 	"testing"
 	"unicode"
@@ -108,109 +103,12 @@ func Type(t entfield.Type) string {
 	return "string"
 }
 
-func genClient() error {
-	pkgName, err := os.Getwd()
-	if err != nil {
-		return err
-	}
+func TestFloat(t *testing.T) {
+	total := 10000
+	pageSize := 26
 
-	moduleName, err := executeGoList()
-	if err != nil {
-		return err
-	}
-
-	pkgName = filepath.Base(pkgName)
-
-	var b bytes.Buffer
-	target := fmt.Sprintf("%s.go", "client")
-	err = tpl.ExecuteTemplate(&b, "client.tmpl", struct {
-		PkgName    string
-		ModuleName string
-	}{
-		PkgName:    pkgName,
-		ModuleName: moduleName,
-	})
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(target, b.Bytes(), os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func executeGoList() (string, error) {
-	cmd := exec.Command("go", "list")
-	cmd.Env = append(os.Environ(), "GO111MODULE=on")
-
-	output, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-
-	moduleName := strings.TrimSpace(string(output))
-	return moduleName, nil
-}
-
-func genMigrate(scs []*load.Schema) error {
-	// 创建migrate目录
-	err = os.MkdirAll("migrate", os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	var b bytes.Buffer
-	target := fmt.Sprintf("migrate/%s.go", "schema")
-	err = tpl.ExecuteTemplate(&b, "migrate.tmpl", scs)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(target, b.Bytes(), os.ModePerm)
-}
-
-func genStruct(sc *load.Schema) error {
-	pkgName, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	pkgName = filepath.Base(pkgName)
-
-	var b bytes.Buffer
-	target := fmt.Sprintf("%s.go", strings.ToLower(sc.Name))
-	err = tpl.ExecuteTemplate(&b, "struct.tmpl", struct {
-		PkgName string
-		Schema  *load.Schema
-	}{
-		PkgName: pkgName,
-		Schema:  sc,
-	})
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(target, b.Bytes(), os.ModePerm)
-}
-
-func genConst(sc *load.Schema) error {
-	name := strings.ToLower(sc.Name)
-	err = os.MkdirAll(name, os.ModePerm)
-	if err != nil {
-		return err
-	}
-	var b bytes.Buffer
-
-	target := fmt.Sprintf("%s/%s.go", name, name)
-	err := tpl.ExecuteTemplate(&b, "const.tmpl", sc)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile(target, b.Bytes(), os.ModePerm)
+	totalPage := math.Ceil(float64(total) / float64(pageSize))
+	fmt.Println(totalPage)
 }
 
 func Test_Load(t *testing.T) {
@@ -218,17 +116,4 @@ func Test_Load(t *testing.T) {
 	path := "./schema"
 	gen.Gen(path)
 
-}
-
-func getPackagePath(filePath string) (string, error) {
-	fset := token.NewFileSet()
-
-	astFile, err := parser.ParseFile(fset, filePath, nil, parser.PackageClauseOnly)
-	if err != nil {
-		return "", err
-	}
-
-	pkgPath := astFile.Name.Name
-
-	return pkgPath, nil
 }
