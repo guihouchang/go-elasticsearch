@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-const release = "v1.0.6"
+const release = "v1.0.7"
 
 var rootCmd = &cobra.Command{
 	Use:     "ent-elastic",
