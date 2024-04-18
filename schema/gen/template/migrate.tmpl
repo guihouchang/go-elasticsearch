@@ -123,7 +123,7 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
             }
 
            // 先进行备份
-           _, err = s.client.Reindex().Body(m.BackupBody()).Do(ctx)
+           _, err = s.client.Reindex().WaitForCompletion(true).Body(m.BackupBody()).Do(ctx)
            if err != nil {
                return err
            }
@@ -149,7 +149,7 @@ func Create(ctx context.Context, s *Schema, mappings []*field.Mapping) error {
               // 等待1秒生效后再恢复数据
               time.Sleep(time.Second)
               // 恢复数据
-              _, err = s.client.Reindex().Body(m.RecoveryBody()).Do(ctx)
+              _, err = s.client.Reindex().WaitForCompletion(true).Body(m.RecoveryBody()).Do(ctx)
               if err != nil {
                 return err
               }
